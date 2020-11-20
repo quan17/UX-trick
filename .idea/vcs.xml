@@ -2,7 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ac1ab9c00f9c54cb74678275529ae854" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/accordion-gallery" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/e4ed03481cc8475cb62331659866779b" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/folding-card" vcs="Git" />
   </component>
 </project>
