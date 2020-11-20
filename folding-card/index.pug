@@ -1,0 +1,23 @@
+-
+  var clothes = [{},{},{}]
+  var sizes=['XS', 'S','M', 'L','XL']
+
+link(rel='stylesheet', href='style.css')
+
+ol.clothes
+  - var i = 1;
+  each cloth in clothes
+    li.clothes__cloth(style={'--animation-order': i})
+      a.clothes__link
+        div.clothes__content.clothes__content--lhs(style={'background-image': 'url(\'../resource/images/dress-'+i+'.jpg\')'})
+
+        div.clothes__content.clothes__content--rhs(aria-hidden="true")(style={'background-image': 'url(\'../resource/images/dress-'+i+'.jpg\')'})
+
+        div.cloth__sizes
+          each size in sizes
+            div.cloth__size
+              if (Math.floor(Math.random() * 5) >= 3)
+                div(style={'color': '#737373'}) !{size}
+              else
+                div !{size}
+    - i++;
