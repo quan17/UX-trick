@@ -1,0 +1,196 @@
+<html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <style>
+      .box {
+        
+      
+      }
+      .rowBox {
+        display:flex;
+        flex-direction:row;
+        gap: 2px;
+        margin:2px;
+      }
+      .turkeyBox {
+        height:30px;
+        width:30px;
+        background-color: Yellow;
+      
+      }
+      .cellBox {
+        height:30px;
+        width:30px;
+        background-color: Grey;
+      
+      }
+      .carBox {
+        height:30px;
+        width:30px;
+        background-color: Red;
+        
+      
+      }
+      .hit{
+       background-color: rgb(255,255,0,0.5);
+      }
+      .rowBox{
+      }
+      .cSpacer{
+       height:30px;
+        width:2px;
+        background-color: Black;
+      }
+      .lineSpacer{
+       height:2px;
+/*         width:100px; */
+        background-color: Blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/jsx">
+    
+      const {useState, useEffect} = React
+      
+      const Car = ({hit}) => {       
+        return (<div className={`carBox ${hit?'hit':null}`}/>)
+      }
+      const Turkey = () => {       
+        return (<div className='turkeyBox'/>)
+      }
+      const CellBox = () => {       
+        return (<div className='cellBox'/>)
+      }
+      const carGenerate = () => {
+        if(Math.random()>=0.5) return Math.random()>=0.5 ? 0 : 1
+        return 0
+      }
+      const carsMove = (cars,columnLength) => cars.map( car => [car[0]+1, car[1], car[2]]).filter(car => car[0]<=columnLength)
+      
+      const Grid =({rows,columns,turkey,time,killTime}) => {
+        
+        const [cars, setCars] = useState([])
+        
+        
+        //car gnerators
+        useEffect(()=>{
+          const newCars = []
+          for(let r = 0;r<rows; r++){
+            const tempLength = carGenerate()
+            if(tempLength > 0){
+               newCars.push([-2,r,tempLength])
+            }
+          
+          }
+          //Todo: need to think about car collision
+          setCars([...carsMove(cars,columns), ...newCars])
+        console.log(cars)
+           console.log(carsMove(cars,columns))
+        },[time])
+        
+        let isHit = false
+        return (
+          <div className='box'>
+            {Array.from(Array(rows)).map( (row, r) => {
+              return <div className='rowBox'>
+                
+                {Array.from(Array(columns)).map( (col, c) => {
+                  return  cars.some( car => {
+                          isHit = false
+                          if (car[1] != r) return false
+
+                          const start = car[0], end = start + car[2]
+                          if(c>=start && c<= end){
+                            //turkey hit?
+                            if(turkey[1] === r && turkey[0]>=start && turkey[0]<= end){
+                              killTime && killTime()
+                              window.alert('turkey hit')
+                              isHit =true
+                              return true
+                            }
+                            return true
+                          }
+                          return false
+                        }) ? <Car hit ={isHit}/> : turkey[0]===c && turkey[1]===r ? <Turkey/>  : <CellBox/>   
+                                   
+                })}
+
+              </div>
+            
+            
+            })}
+      
+
+          </div>
+        
+        )
+      
+      
+      }
+
+
+    const TimerGrid = (props) => {
+      const [time,setTime] = useState(0)
+      const [timer, setTimer] = useState()
+      useEffect(()=>{
+        setTimer(setInterval(()=>{
+          
+          setTime( time=>time+1)
+        },2000))
+      
+        return () => clearInterval(interval)
+      
+      },[])
+      
+      
+      return <Grid {...props} killTime={() => {clearInterval(timer)}} time = {time}/>
+    }
+
+
+      const App = props => {
+        return (<div>{props.children}</div>);
+      };
+      ReactDOM.render(
+        <App>
+          <h4>Turkey Cross</h4>
+          <TimerGrid
+            rows={8}
+            columns={8}
+            turkey={[5,5]}
+            
+          />
+      
+      
+      
+      
+      </App>,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+  
+</html>
+  
+<!--
+Why did the Turkey cross the road?
+
+Grid (>=3 row, >= 3 columns)
+First Row - Is starting position for Turkey (in center column)
+Goal: For Turkey to get to last row.
+Middle Rows: Are for Cars. 
+Car is 1 or more cells long.
+Car's move 1 "tick" at a time from left to right.
+Cars are randomly generated.
+Game ends if Turkey is hit by car.
+
+User Controls:
+L, R, U, D - Tick intention.
+Thanks for the extra time, I finished the game without input, maybe we can talk about the input in future
+-->
