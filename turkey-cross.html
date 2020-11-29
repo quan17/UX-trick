@@ -169,12 +169,13 @@
 
 
     const TimerGrid = (props) => {
+      const { columns:maxBorderX } =props
       const turkeyRandomStart = (max)=> Math.floor(Math.random()*(max-1)+1)
       const [time,setTime] = useState(0)
       const [timer, setTimer] = useState()
       const [move, setMove] = useState([0,0])
       const [input, setInput] = useState('')
-      const [turkey, setTurkey] = useState(props.turkey|| [turkeyRandomStart(props.columns),0])
+      const [turkey, setTurkey] = useState(props.turkey|| [turkeyRandomStart(maxBorderX),0])
 
       const stateRef = useRef()
       stateRef.move = move
@@ -185,7 +186,10 @@
 
           const fn = () => {
             // setTurkey(turkey => {console.log(`new turkey: ${[turkey[0]+move[0],turkey[1]+move[1]]}`); return [turkey[0]+move[0],turkey[1]+move[1]]})
-            setTurkey(turkey => [turkey[0]+move[0],turkey[1]+move[1]])
+            setTurkey(turkey => [
+                    turkey[0]+move[0] < maxBorderX && turkey[0]+move[0] >= 0 ? turkey[0]+move[0] : turkey[0] ,
+                    turkey[1]+move[1] >= 0 ? turkey[1]+move[1] : turkey[1]
+            ])
             setTime( time=> time+1 )
             // setTime( time=>{console.log(`new time: ${time+1}`);return time+1})
             // console.log(`new move: ${move}`);
