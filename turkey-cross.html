@@ -6,7 +6,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
     <style>
       .box {
         
@@ -63,16 +62,16 @@
 
 
         let move =[0,0]
-        if(keoDownCb('d')) {
+        if(keoDownCb('ArrowRight')) {
           exeCb([1,0])
         }
-        else if(keoDownCb('a')) {
+        else if(keoDownCb('ArrowLeft')) {
           exeCb([-1,0])
         }
-        else if(keoDownCb('s')) {
+        else if(keoDownCb('ArrowDown')) {
           exeCb([0,1])
         }
-        else if(keoDownCb('w')) {
+        else if(keoDownCb('ArrowUp')) {
           exeCb([0,-1])
         }
       }
@@ -95,8 +94,8 @@
       const Grid =({rows,columns,turkey,time,killTime}) => {
         
         const [cars, setCars] = useState([])
-        console.log(`Turkey: ${turkey}`)
-        console.log(`time: ${time}`)
+        // console.log(`Turkey: ${turkey}`)
+        // console.log(`time: ${time}`)
         
         //car gnerators
         useEffect(()=>{
@@ -109,7 +108,7 @@
           
           }
           //Todo: need to think about car collision
-          console.log(`Effect Turkey: ${turkey}`)
+          // console.log(`Effect Turkey: ${turkey}`)
           setCars([...carsMove(cars,columns), ...newCars])
         // console.log(cars)
         //    console.log(carsMove(cars,columns))
@@ -139,11 +138,11 @@
                             //turkey hit?
                             if(!isHit && turkey[1] === car[1] && turkey[0]>=start && turkey[0]<= end){
                               killTime && killTime()
-                              console.log('hit '+car)
-                              console.log('hit '+turkey)
-                              //debugger
-                              console.log('turkey hit')
-                              //window.alert('turkey hit')
+                              // console.log('hit '+car)
+                              // console.log('hit '+turkey)
+                              // //debugger
+                              // console.log('turkey hit')
+                              window.alert('turkey hit')
 
                               isHit =true
                               return true
@@ -173,23 +172,26 @@
       const turkeyRandomStart = (max)=> Math.floor(Math.random()*(max-1)+1)
       const [time,setTime] = useState(0)
       const [timer, setTimer] = useState()
-      const [input, setInput] = useState([0,0])
+      const [move, setMove] = useState([0,0])
+      const [input, setInput] = useState('')
       const [turkey, setTurkey] = useState(props.turkey|| [turkeyRandomStart(props.columns),0])
 
       const stateRef = useRef()
-      stateRef.input = input
+      stateRef.move = move
 
       useEffect(()=>{
         setTimer(setInterval(()=>{
-          let input =  stateRef.input
+          let move =  stateRef.move
 
           const fn = () => {
-            setTurkey(turkey => {console.log(`new turkey: ${[turkey[0]+input[0],turkey[1]+input[1]]}`); return [turkey[0]+input[0],turkey[1]+input[1]]})
-            setTime( time=>{console.log(`new time: ${time+1}`);return time+1})
-            console.log(`new input: ${input}`);
+            // setTurkey(turkey => {console.log(`new turkey: ${[turkey[0]+move[0],turkey[1]+move[1]]}`); return [turkey[0]+move[0],turkey[1]+move[1]]})
+            setTurkey(turkey => [turkey[0]+move[0],turkey[1]+move[1]])
+            setTime( time=> time+1 )
+            // setTime( time=>{console.log(`new time: ${time+1}`);return time+1})
+            // console.log(`new move: ${move}`);
 
 
-            setInput([0,0])
+            setMove([0,0])
           }
           fn()
         },2000))
@@ -207,7 +209,7 @@
           window.removeEventListener('keyup', upHandler);
         };
       }, [])
-      const upHandler = ({key}) => keyToMove((target)=> key === target, (move)=> move&&setInput(move))
+      const upHandler = ({key}) => {keyToMove((target)=> key === target, (move)=> move&&setMove(move)); setInput(key)}
       
       
       return <div>
@@ -222,16 +224,16 @@
       };
       ReactDOM.render(
         <App>
-          <h4>Turkey Cross</h4>
+          <h3>Turkey Cross</h3>
+          <h6>Move your Turkey With 'Arrow Buttons' per second</h6>
           <TimerGrid
             rows={8}
             columns={8}
             //turkey={[2,0]}
           />
-      
-      
-      
-      
+          <h6>Cars are randomly generated.
+            Game wins if Turkey cross all the street to the last row
+            Game ends if Turkey is hit by car.</h6>
       </App>,
         document.getElementById('root')
       );

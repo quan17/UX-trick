@@ -99,7 +99,9 @@ svg#curve {
 .size {
     transition-delay: 0.02s;
 }
-
+.size.disabled{
+    background-color: #737373;
+}
 
 .size .icon {
     font-size: 12px;
@@ -123,6 +125,6 @@ svg#curve {
     padding-top: 5px;
 }
 
-.job {
+.money {
     margin-top: 10px;
 }
